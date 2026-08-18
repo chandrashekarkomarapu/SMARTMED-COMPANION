@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SmartMed Companion{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}?v=notification-layout-4">
 </head>
 
 <body>
@@ -15,20 +15,20 @@
             <div class="brand-box">
                 <div class="brand-icon">+</div>
                 <div>
-                    <h1>SmartMed</h1>
-                    <p>Companion</p>
+                    <h1 data-i18n="brand_title_short">SmartMed</h1>
+                    <p data-i18n="brand_title_suffix">Companion</p>
                 </div>
             </div>
             <nav class="nav-menu" aria-label="Sidebar navigation">
-                <a href="/dashboard" class="nav-item">🏠 Dashboard</a>
-                <a href="/scanner" class="nav-item">📄 Prescription Scanner</a>
-                <a href="/medicines" class="nav-item">💊 Medicines</a>
-                <a href="/reminders" class="nav-item">⏰ Reminders</a>
-                <a href="/safety" class="nav-item">🛡 Safety</a>
-                <a href="/emergency" class="nav-item">🚨 Emergency</a>
-                <a href="#" class="nav-item">⚙ Settings</a>
+                <a href="/dashboard" class="nav-item" data-i18n="dashboard" data-emoji="🏠 ">Dashboard</a>
+                <a href="/scanner" class="nav-item" data-i18n="prescriptions" data-emoji="📄 ">Prescription Scanner</a>
+                <a href="/medicines" class="nav-item" data-i18n="medicines" data-emoji="💊 ">Medicines</a>
+                <a href="/reminders" class="nav-item" data-i18n="reminders" data-emoji="⏰ ">Reminders</a>
+                <a href="/safety" class="nav-item" data-i18n="safety" data-emoji="🛡 ">Safety</a>
+                <a href="/emergency" class="nav-item" data-i18n="emergency" data-emoji="🚨 ">Emergency</a>
+                <a href="#" class="nav-item" data-i18n="settings" data-emoji="⚙ ">Settings</a>
             </nav>
-            <div class="sidebar-disclaimer">
+            <div class="sidebar-disclaimer" data-i18n="disclaimer">
                 SmartMed Companion is an educational and medication-support tool. It does not replace advice, diagnosis,
                 or treatment from a doctor or pharmacist.
             </div>
@@ -37,23 +37,72 @@
         <main class="main-panel">
             <header class="topbar">
                 <div class="d-flex align-items-center gap-3">
-                    <button class="mobile-menu-btn" aria-label="Open menu">☰</button>
+                    <div class="menu-dropdown">
+                        <button class="mobile-menu-btn" aria-label="Open menu" aria-haspopup="true"
+                            aria-expanded="false">☰</button>
+                        <nav class="dropdown-menu" aria-label="Category menu">
+                            <a href="/dashboard" class="dropdown-item" data-i18n="dashboard"
+                                data-emoji="🏠 ">Dashboard</a>
+                            <a href="/scanner" class="dropdown-item" data-i18n="prescriptions"
+                                data-emoji="📄 ">Prescription
+                                Scanner</a>
+                            <a href="/medicines" class="dropdown-item" data-i18n="medicines"
+                                data-emoji="💊 ">Medicines</a>
+                            <a href="/reminders" class="dropdown-item" data-i18n="reminders"
+                                data-emoji="⏰ ">Reminders</a>
+                            <a href="/safety" class="dropdown-item" data-i18n="safety" data-emoji="🛡 ">Safety</a>
+                            <a href="/emergency" class="dropdown-item" data-i18n="emergency"
+                                data-emoji="🚨 ">Emergency</a>
+                            <a href="#" class="dropdown-item" data-i18n="settings" data-emoji="⚙ ">Settings</a>
+                        </nav>
+                    </div>
                     <div>
-                        <h2>SmartMed Companion</h2>
-                        <small>Multimodal Prescription & Medication Safety Assistant</small>
+                        <h2 data-i18n="brand_title" data-emoji="✚ ">SmartMed Companion</h2>
+                        <small data-i18n="brand_subtitle">Multimodal Prescription & Medication Safety Assistant</small>
                     </div>
                 </div>
                 <div class="topbar-actions">
-                    <div class="search-box">
-                        <input type="search" placeholder="Search" aria-label="Search">
-                    </div>
-                    <select class="language-select" aria-label="Language selector">
+                    <form class="search-box" id="global-search-form" action="/medicines" method="get">
+                        <input id="global-search-input" type="search" name="q" placeholder="Search" aria-label="Search">
+                    </form>
+                    <select id="language-select" class="language-select" aria-label="Language selector">
                         <option value="en">English</option>
                         <option value="te">తెలుగు</option>
                         <option value="hi">हिन्दी</option>
                     </select>
-                    <button class="action-button" aria-label="Notifications">🔔</button>
-                    <div class="profile-pill">AJ</div>
+                    <div class="notification-menu">
+                        <button class="action-button" aria-label="Notifications" aria-haspopup="true"
+                            aria-expanded="false" data-i18n="notifications" data-emoji="🔔 ">Notifications</button>
+                        <div class="notification-panel" role="status" aria-live="polite">
+                            <div class="notification-panel-header">
+                                <strong data-i18n="notification_title">Notifications</strong>
+                                <span class="notification-dot" aria-hidden="true"></span>
+                            </div>
+                            <p data-i18n="no_notifications">No new notifications.</p>
+                            <a href="/reminders" data-i18n="view_reminders" data-emoji="⏰ ">View reminders</a>
+                        </div>
+                    </div>
+                    <div class="profile-menu">
+                        <button class="profile-pill" type="button" aria-label="Profile" aria-haspopup="true"
+                            aria-expanded="false">AJ</button>
+                        <div class="profile-panel">
+                            <div class="profile-panel-header">
+                                <strong data-i18n="profile_title">Your profile</strong>
+                                <span class="profile-avatar-large">AJ</span>
+                            </div>
+                            <label>
+                                <span data-i18n="full_name_field">Full name</span>
+                                <input id="profile-full-name" type="text" autocomplete="name"
+                                    placeholder="Alex Johnson">
+                            </label>
+                            <label>
+                                <span data-i18n="username_field">Username</span>
+                                <input id="profile-username" type="text" autocomplete="username" placeholder="alex">
+                            </label>
+                            <button id="save-profile" type="button" class="profile-save-button"
+                                data-i18n="save_profile_button">Save profile</button>
+                        </div>
+                    </div>
                 </div>
             </header>
             {% block content %}{% endblock %}
@@ -62,7 +111,7 @@
 
     <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', path='js/app.js') }}"></script>
+    <script src="{{ url_for('static', path='js/app.js') }}?v=profile-1"></script>
     {% block scripts %}{% endblock %}
 </body>
 

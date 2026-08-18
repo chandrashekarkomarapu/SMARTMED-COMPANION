@@ -38,56 +38,60 @@ def test_route(route_name, route_path, expected_status=200, check_content=None):
         })
         return False
 
-print("=" * 70)
-print("  SmartMed Companion - Route Testing After Dashboard Fix")
-print("=" * 70)
+def run_tests():
+    print("=" * 70)
+    print("  SmartMed Companion - Route Testing After Dashboard Fix")
+    print("=" * 70)
 
-# Test each route
-routes_to_test = [
-    ("Health Check", "/health", 200, None),
-    ("Dashboard", "/dashboard", 200, "medicine"),
-    ("Medicines", "/medicines", 200, "medicine"),
-    ("Reminders", "/reminders", 200, "reminder"),
-    ("Safety", "/safety", 200, "safety"),
-    ("Emergency", "/emergency", 200, "emergency"),
-    ("Scanner", "/scanner", 200, "scanner"),
-]
+    # Test each route
+    routes_to_test = [
+        ("Health Check", "/health", 200, None),
+        ("Dashboard", "/dashboard", 200, "medicine"),
+        ("Medicines", "/medicines", 200, "medicine"),
+        ("Reminders", "/reminders", 200, "reminder"),
+        ("Safety", "/safety", 200, "safety"),
+        ("Emergency", "/emergency", 200, "emergency"),
+        ("Scanner", "/scanner", 200, "scanner"),
+    ]
 
-print("\nRunning tests...\n")
-for route_name, route_path, expected_status, content_check in routes_to_test:
-    result = test_route(route_name, route_path, expected_status, content_check)
-    status_symbol = "✅" if result else "❌"
-    print(f"  {status_symbol} {route_name:20} {route_path:30}")
+    print("\nRunning tests...\n")
+    for route_name, route_path, expected_status, content_check in routes_to_test:
+        result = test_route(route_name, route_path, expected_status, content_check)
+        status_symbol = "[PASS]" if result else "[FAIL]"
+        print(f"  {status_symbol} {route_name:20} {route_path:30}")
 
-# Print detailed results
-print("\n" + "=" * 70)
-print("  Detailed Results:")
-print("=" * 70)
+    # Print detailed results
+    print("\n" + "=" * 70)
+    print("  Detailed Results:")
+    print("=" * 70)
 
-all_passed = True
-for result in test_results:
-    status = "✅ PASS" if result["success"] else "❌ FAIL"
-    print(f"\n{status} - {result['route']}")
-    print(f"   Path:   {result['path']}")
-    print(f"   Status: {result.get('status', 'N/A')}")
-    if "error" in result:
-        print(f"   Error:  {result['error']}")
+    all_passed = True
+    for result in test_results:
+        status = "[PASS]" if result["success"] else "[FAIL]"
+        print(f"\n{status} - {result['route']}")
+        print(f"   Path:   {result['path']}")
+        print(f"   Status: {result.get('status', 'N/A')}")
+        if "error" in result:
+            print(f"   Error:  {result['error']}")
+        else:
+            print(f"   Size:   {result['size']} bytes")
+        
+        if not result["success"]:
+            all_passed = False
+
+    # Summary
+    print("\n" + "=" * 70)
+    passed_count = sum(1 for r in test_results if r["success"])
+    total_count = len(test_results)
+    print(f"  Summary: {passed_count}/{total_count} tests passed")
+    print("=" * 70)
+
+    if all_passed:
+        print("\nALL TESTS PASSED\n")
+        return 0
     else:
-        print(f"   Size:   {result['size']} bytes")
-    
-    if not result["success"]:
-        all_passed = False
+        print("\nSome tests failed\n")
+        return 1
 
-# Summary
-print("\n" + "=" * 70)
-passed_count = sum(1 for r in test_results if r["success"])
-total_count = len(test_results)
-print(f"  Summary: {passed_count}/{total_count} tests passed")
-print("=" * 70)
-
-if all_passed:
-    print("\n✅ ALL TESTS PASSED - Dashboard issue is FIXED!\n")
-    sys.exit(0)
-else:
-    print("\n❌ Some tests failed - see details above\n")
-    sys.exit(1)
+if __name__ == "__main__":
+    sys.exit(run_tests())

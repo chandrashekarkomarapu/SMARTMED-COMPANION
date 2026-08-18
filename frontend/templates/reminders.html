@@ -4,11 +4,40 @@
 <div class="page-content">
     <div class="page-header">
         <div>
-            <p class="eyebrow">Medication schedule</p>
-            <h3>Reminders</h3>
+            <p class="eyebrow" data-i18n="medication_schedule">Medication schedule</p>
+            <h3 data-i18n="reminders_page_title">Reminders</h3>
         </div>
-        <button class="btn btn-primary" id="add-reminder-btn">Add reminder</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#reminder-form-panel"
+            aria-expanded="false" aria-controls="reminder-form-panel" id="add-reminder-btn"
+            data-i18n="add_reminder_button">Add reminder</button>
     </div>
+
+    <div id="reminder-form-panel" class="collapse">
+        <form id="reminder-form" class="panel confirmation-form" novalidate>
+            <label>
+                <span data-i18n="medicine_name_field">Medicine name</span>
+                <input type="text" name="medicine_name" placeholder="e.g. Amoxicillin" required>
+            </label>
+            <label>
+                <span data-i18n="time_field">Time</span>
+                <input type="time" name="time" required>
+            </label>
+            <label>
+                <span data-i18n="frequency_field">Frequency</span>
+                <input type="text" name="frequency" value="Once daily" placeholder="Once daily">
+            </label>
+            <label>
+                <span data-i18n="notes_field">Notes</span>
+                <input type="text" name="notes" placeholder="Optional notes">
+            </label>
+            <div class="mini-actions">
+                <button type="submit" class="btn btn-primary" data-i18n="save_reminder_button">Save reminder</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="collapse"
+                    data-bs-target="#reminder-form-panel" data-i18n="cancel_button">Cancel</button>
+            </div>
+        </form>
+    </div>
+
     <div class="panel">
         <div class="stack-list compact">
             {% for reminder in reminders %}
@@ -24,7 +53,7 @@
                 </div>
             </div>
             {% else %}
-            <div class="empty-state">No reminders scheduled yet.</div>
+            <div class="empty-state" data-i18n="no_reminders_scheduled">No reminders scheduled yet.</div>
             {% endfor %}
         </div>
     </div>

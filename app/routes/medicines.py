@@ -10,11 +10,14 @@ router = APIRouter(tags=["medicines"])
 
 
 @router.get("/medicines")
-async def medicines_page(request: Request, db: Session = Depends(get_db)):
-    medicines = db.query(Medicine).all()
+async def medicines_page(request: Request, q: str | None = Query(default=None), db: Session = Depends(get_db)):
+    query = db.query(Medicine)
+    if q:
+        query = query.filter(Medicine.name.ilike(f"%{q}%"))
+    medicines = query.all()
     try:
         template = request.app.state.templates.env.get_template("medicines.html")
-        html_content = template.render(request=request, medicines=medicines)
+        html_content = template.render(request=request, medicines=medicines, search_query=q or "")
         return HTMLResponse(content=html_content)
     except Exception as e:
         return HTMLResponse(content=f"<h1>Error loading medicines page: {str(e)}</h1>", status_code=500)

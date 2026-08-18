@@ -4,76 +4,120 @@
 <div class="page-content">
     <div class="page-header">
         <div>
-            <p class="eyebrow">Good morning</p>
-            <h3>Akshay</h3>
+            <p class="eyebrow" data-i18n="good_evening">Good Evening</p>
+            <h3 id="welcome-name">{{ welcome_name or 'Alex Johnson' }}</h3>
         </div>
-        <div class="badge badge-info">Demo mode</div>
+        <div class="badge badge-info" data-i18n="demo_mode">Demo mode</div>
     </div>
 
     <div class="summary-grid">
         <div class="summary-card primary">
-            <span class="card-label">Today's medicines</span>
-            <h4>3</h4>
-            <small>2 due later today</small>
+            <span class="card-label" data-i18n="todays_medicines">Today's medicines</span>
+            <h4>{{ medicines|length }}</h4>
+            <small data-i18n="active_prescriptions">{{ medicines|length }} active prescriptions</small>
         </div>
         <div class="summary-card warning">
-            <span class="card-label">Upcoming reminders</span>
-            <h4>2</h4>
-            <small>Next: 08:00</small>
+            <span class="card-label" data-i18n="upcoming_reminders">Upcoming reminders</span>
+            <h4>{{ reminders|length }}</h4>
+            <small data-i18n="next_scheduled_reminder">Next scheduled reminder</small>
         </div>
         <div class="summary-card danger">
-            <span class="card-label">Safety alerts</span>
-            <h4>1</h4>
-            <small>Review instructions</small>
+            <span class="card-label" data-i18n="safety_alerts">Safety alerts</span>
+            <h4>{{ alerts|length }}</h4>
+            <small data-i18n="review_instructions">Review instructions</small>
         </div>
         <div class="summary-card success">
-            <span class="card-label">Recent prescriptions</span>
-            <h4>4</h4>
-            <small>Last upload today</small>
+            <span class="card-label" data-i18n="recent_prescriptions">Recent prescriptions</span>
+            <h4>{{ prescriptions|length }}</h4>
+            <small data-i18n="stored_records">Stored records</small>
         </div>
     </div>
 
     <div class="two-panel-grid">
         <section class="panel">
             <div class="panel-header">
-                <h4>Today's medicines</h4>
+                <h4 data-i18n="todays_medicines_panel">Today's medicines</h4>
             </div>
+
+            <form id="dashboard-medicine-form" class="confirmation-form hidden" novalidate>
+                <input type="hidden" id="dashboard-medicine-id" name="id">
+                <label>
+                    <span data-i18n="medicine_name_field">Medicine name</span>
+                    <input type="text" id="dashboard-medicine-name" name="name" required>
+                </label>
+                <label>
+                    <span data-i18n="strength_field">Strength</span>
+                    <input type="text" id="dashboard-medicine-strength" name="strength">
+                </label>
+                <label>
+                    <span data-i18n="frequency_field">Frequency</span>
+                    <input type="text" id="dashboard-medicine-frequency" name="frequency">
+                </label>
+                <label>
+                    <span data-i18n="duration_field">Duration</span>
+                    <input type="text" id="dashboard-medicine-duration" name="duration">
+                </label>
+                <label>
+                    <span data-i18n="instructions_field">Instructions</span>
+                    <input type="text" id="dashboard-medicine-instructions" name="instructions">
+                </label>
+                <label>
+                    <span data-i18n="source_field">Source</span>
+                    <input type="text" id="dashboard-medicine-source" name="source">
+                </label>
+                <div class="mini-actions">
+                    <button type="submit" class="btn btn-primary btn-sm" data-i18n="save_changes_button">Save
+                        changes</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="cancel-medicine-edit"
+                        data-i18n="cancel_button">Cancel</button>
+                </div>
+            </form>
+
             <div class="stack-list">
-                <div class="medicine-row">
-                    <div><strong>Paracetamol</strong>
-                        <div>500 mg</div>
+                {% if medicines %}
+                {% for med in medicines %}
+                <div class="medicine-row" data-medicine-id="{{ med.id }}">
+                    <div>
+                        <strong>{{ med.name }}</strong>
+                        <div>{{ med.strength or 'Standard dose' }}</div>
                     </div>
-                    <div class="meta-block"><small>08:00</small><small>Three times daily</small></div>
-                    <div class="status status-success">Taken</div>
-                    <div class="mini-actions"><button class="btn btn-sm btn-primary">Mark as Taken</button><button
-                            class="btn btn-sm btn-outline-secondary">Mark as Missed</button></div>
-                </div>
-                <div class="medicine-row">
-                    <div><strong>levocetirizine</strong>
-                        <div>500 mg</div>
+                    <div class="meta-block">
+                        <small>{{ med.duration or 'Daily' }}</small>
+                        <small>{{ med.frequency or 'As directed' }}</small>
                     </div>
-                    <div class="meta-block"><small>12:30</small><small>As needed</small></div>
-                    <div class="status status-warning">Upcoming</div>
-                    <div class="mini-actions"><button class="btn btn-sm btn-primary">Mark as Taken</button><button
-                            class="btn btn-sm btn-outline-secondary">Mark as Missed</button></div>
+                    <div class="status status-success" data-i18n="active_status">Active</div>
+                    <div class="mini-actions">
+                        <button type="button" class="btn btn-sm btn-outline-primary" data-medicine-action="edit"
+                            data-medicine-id="{{ med.id }}" data-name="{{ med.name }}"
+                            data-strength="{{ med.strength or '' }}" data-frequency="{{ med.frequency or '' }}"
+                            data-duration="{{ med.duration or '' }}" data-instructions="{{ med.instructions or '' }}"
+                            data-source="{{ med.source or 'User-entered' }}" data-i18n="edit_button">Edit</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" data-medicine-action="delete"
+                            data-medicine-id="{{ med.id }}" data-i18n="delete_button">Delete</button>
+                    </div>
                 </div>
+                {% endfor %}
+                {% else %}
+                <p class="empty-state" data-i18n="no_medicines_added">No medicines added yet.</p>
+                {% endif %}
             </div>
         </section>
         <section class="panel">
             <div class="panel-header">
-                <h4>Upcoming reminders</h4>
+                <h4 data-i18n="upcoming_reminders_panel">Upcoming reminders</h4>
             </div>
             <div class="stack-list compact">
+                {% if reminders %}
+                {% for rem in reminders %}
                 <div class="list-item">
-                    <div><strong>loratadine</strong></div>
-                    <div>08:00</div>
-                    <div>Three times daily</div>
+                    <div><strong>{{ rem.medicine_name }}</strong></div>
+                    <div>{{ rem.time }}</div>
+                    <div>{{ rem.frequency }}</div>
                 </div>
-                <div class="list-item">
-                    <div><strong>Disprin</strong></div>
-                    <div>21:00</div>
-                    <div>Once daily</div>
-                </div>
+                {% endfor %}
+                {% else %}
+                <p class="empty-state" data-i18n="no_reminders_scheduled">No reminders scheduled.</p>
+                {% endif %}
             </div>
         </section>
     </div>
@@ -81,26 +125,38 @@
     <div class="two-panel-grid">
         <section class="panel">
             <div class="panel-header">
-                <h4>Recent prescriptions</h4>
+                <h4 data-i18n="recent_prescriptions_panel">Recent prescriptions</h4>
             </div>
             <div class="stack-list compact">
+                {% if prescriptions %}
+                {% for p in prescriptions %}
                 <div class="list-item">
-                    <div><strong>Prescription_2026_01.pdf</strong></div>
-                    <div>2026-08-18</div>
-                    <div>3 medicines</div><button class="btn btn-sm btn-outline-primary">View</button>
+                    <div><strong>{{ p.title or 'Prescription #' ~ p.id }}</strong></div>
+                    <div>Status: {{ p.status }}</div>
+                    <div>Confidence: {{ p.confidence }}%</div>
                 </div>
+                {% endfor %}
+                {% else %}
+                <p class="empty-state" data-i18n="no_prescriptions_uploaded">No prescriptions uploaded yet.</p>
+                {% endif %}
             </div>
         </section>
         <section class="panel">
             <div class="panel-header">
-                <h4>Safety alerts</h4>
+                <h4 data-i18n="safety_alerts_panel">Safety alerts</h4>
             </div>
             <div class="stack-list compact">
-                <div class="alert-box"><span class="severity-badge low">LOW</span>
-                    <div><strong>levocetirizine, Paracetamol</strong></div>
-                    <div>Demo medication information used for education only.</div><button
-                        class="btn btn-sm btn-outline-secondary">View details</button>
+                {% if alerts %}
+                {% for a in alerts %}
+                <div class="alert-box">
+                    <span class="severity-badge {{ a.severity|lower }}">{{ a.severity }}</span>
+                    <div><strong>{{ a.medicine_names }}</strong></div>
+                    <div>{{ a.description }}</div>
                 </div>
+                {% endfor %}
+                {% else %}
+                <p class="empty-state" data-i18n="no_safety_warnings">No safety warnings at this time.</p>
+                {% endif %}
             </div>
         </section>
     </div>

@@ -1,10 +1,11 @@
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Request, UploadFile
 from fastapi.responses import JSONResponse, HTMLResponse
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
+from app.models.medicine import Medicine
 from app.models.prescription import Prescription
 from app.services.ocr_service import process_file
 from app.services.prescription_parser import extract_fields
@@ -58,7 +59,8 @@ async def upload_prescription(file: UploadFile = File(...), db: Session = Depend
         raise HTTPException(status_code=500, detail="Unable to read the prescription. Please try a clearer image.") from exc
 
     if result.get("status") == "error":
-        return JSONResponse({"status": "error", "message": result.get("error", "Unable to read the prescription.")}, status_code=400)
+        message = result.get("error", "Unable to read the prescription.")
+        return JSONResponse({"status": "error", "message": message, "detail": message}, status_code=400)
 
     parsed = extract_fields(result.get("text", ""), result.get("confidence", 0.0))
     record = Prescription(
@@ -87,28 +89,85 @@ async def upload_prescription(file: UploadFile = File(...), db: Session = Depend
 
 @router.post("/prescriptions/confirm")
 async def confirm_prescription(
-    prescription_id: int,
-    medicine_name: str = "",
-    strength: str = "",
-    frequency: str = "",
-    duration: str = "",
-    instructions: str = "",
+    request: Request,
+    prescription_id: int | None = Query(default=None),
+    medicine_name: str = Query(default=""),
+    strength: str = Query(default=""),
+    frequency: str = Query(default=""),
+    duration: str = Query(default=""),
+    instructions: str = Query(default=""),
     db: Session = Depends(get_db),
 ):
-    record = db.query(Prescription).filter(Prescription.id == prescription_id).first()
+    pid = prescription_id
+    m_name = medicine_name
+    m_strength = strength
+    m_freq = frequency
+    m_dur = duration
+    m_inst = instructions
+
+    content_type = request.headers.get("content-type", "").lower()
+    if "application/json" in content_type:
+        try:
+            body = await request.json()
+            if isinstance(body, dict):
+                pid = body.get("prescription_id", pid)
+                m_name = body.get("medicine_name", m_name)
+                m_strength = body.get("strength", m_strength)
+                m_freq = body.get("frequency", m_freq)
+                m_dur = body.get("duration", m_dur)
+                m_inst = body.get("instructions", m_inst)
+        except Exception:
+            pass
+    elif "application/x-www-form-urlencoded" in content_type or "multipart/form-data" in content_type:
+        try:
+            form = await request.form()
+            if form:
+                if "prescription_id" in form:
+                    try:
+                        pid = int(form["prescription_id"])
+                    except (ValueError, TypeError):
+                        pass
+                m_name = str(form.get("medicine_name", m_name))
+                m_strength = str(form.get("strength", m_strength))
+                m_freq = str(form.get("frequency", m_freq))
+                m_dur = str(form.get("duration", m_dur))
+                m_inst = str(form.get("instructions", m_inst))
+        except Exception:
+            pass
+
+    if pid is None:
+        raise HTTPException(status_code=400, detail="Prescription ID is required.")
+
+    record = db.query(Prescription).filter(Prescription.id == pid).first()
     if not record:
         raise HTTPException(status_code=404, detail="Prescription not found.")
     record.status = "confirmed"
+
+    # Save to Medicine table if medicine_name is provided
+    if m_name and m_name.strip():
+        existing_med = db.query(Medicine).filter(Medicine.user_id == record.user_id, Medicine.name == m_name.strip()).first()
+        if not existing_med:
+            new_med = Medicine(
+                user_id=record.user_id,
+                name=m_name.strip(),
+                strength=m_strength.strip() if m_strength else None,
+                frequency=m_freq.strip() if m_freq else None,
+                duration=m_dur.strip() if m_dur else None,
+                instructions=m_inst.strip() if m_inst else None,
+                source=f"Prescription #{record.id}",
+            )
+            db.add(new_med)
     db.commit()
+
     return JSONResponse({
         "status": "success",
-        "message": "Prescription confirmed and ready to save.",
+        "message": "Prescription confirmed and saved.",
         "data": {
-            "prescription_id": prescription_id,
-            "medicine_name": medicine_name,
-            "strength": strength,
-            "frequency": frequency,
-            "duration": duration,
-            "instructions": instructions,
+            "prescription_id": pid,
+            "medicine_name": m_name,
+            "strength": m_strength,
+            "frequency": m_freq,
+            "duration": m_dur,
+            "instructions": m_inst,
         },
     })

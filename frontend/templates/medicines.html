@@ -4,25 +4,70 @@
 <div class="page-content">
     <div class="page-header">
         <div>
-            <p class="eyebrow">Medication list</p>
-            <h3>Medicines</h3>
+            <p class="eyebrow" data-i18n="medication_list">Medication list</p>
+            <h3 data-i18n="medicines_page_title">Medicines</h3>
         </div>
-        <button class="btn btn-primary">Add medicine</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#medicine-form-panel"
+            aria-expanded="false" aria-controls="medicine-form-panel" data-i18n="add_medicine_button">Add
+            medicine</button>
     </div>
+
+    <div id="medicine-form-panel" class="collapse">
+        <form id="medicine-form" class="panel medicine-form" novalidate>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="medicine-name" class="form-label" data-i18n="medicine_name_field">Medicine name</label>
+                    <input type="text" id="medicine-name" name="name" class="form-control" placeholder="e.g. Ibuprofen"
+                        required>
+                </div>
+                <div class="col-md-6">
+                    <label for="medicine-strength" class="form-label" data-i18n="strength_field">Strength</label>
+                    <input type="text" id="medicine-strength" name="strength" class="form-control"
+                        placeholder="e.g. 200 mg">
+                </div>
+                <div class="col-md-6">
+                    <label for="medicine-frequency" class="form-label" data-i18n="frequency_field">Frequency</label>
+                    <input type="text" id="medicine-frequency" name="frequency" class="form-control"
+                        placeholder="e.g. Twice daily">
+                </div>
+                <div class="col-md-6">
+                    <label for="medicine-duration" class="form-label" data-i18n="duration_field">Duration</label>
+                    <input type="text" id="medicine-duration" name="duration" class="form-control"
+                        placeholder="e.g. 5 days">
+                </div>
+                <div class="col-12">
+                    <label for="medicine-instructions" class="form-label"
+                        data-i18n="instructions_field">Instructions</label>
+                    <textarea id="medicine-instructions" name="instructions" class="form-control" rows="3"
+                        placeholder="e.g. Take after food"></textarea>
+                </div>
+                <div class="col-12">
+                    <label for="medicine-source" class="form-label" data-i18n="source_field">Source</label>
+                    <input type="text" id="medicine-source" name="source" class="form-control" value="User-entered">
+                </div>
+            </div>
+            <div class="form-actions mt-3">
+                <button type="submit" class="btn btn-primary" data-i18n="save_medicine_button">Save medicine</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="collapse"
+                    data-bs-target="#medicine-form-panel" data-i18n="cancel_button">Cancel</button>
+            </div>
+        </form>
+    </div>
+
     <div class="disclaimer-box">SmartMed Companion is an educational and medication-support tool. It does not replace
         advice, diagnosis, or treatment from a doctor or pharmacist.</div>
     <div class="table-card panel">
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Strength</th>
-                    <th>Frequency</th>
-                    <th>Duration</th>
-                    <th>Instructions</th>
-                    <th>Source</th>
-                    <th>Created date</th>
-                    <th>Actions</th>
+                    <th data-i18n="table_name">Name</th>
+                    <th data-i18n="strength_field">Strength</th>
+                    <th data-i18n="frequency_field">Frequency</th>
+                    <th data-i18n="duration_field">Duration</th>
+                    <th data-i18n="instructions_field">Instructions</th>
+                    <th data-i18n="source_field">Source</th>
+                    <th data-i18n="created_date">Created date</th>
+                    <th data-i18n="actions">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,7 +84,8 @@
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="8" class="empty-state">No medicines yet. Add a medicine from a prescription or manual
+                    <td colspan="8" class="empty-state" data-i18n="no_medicines_yet">No medicines yet. Add a medicine
+                        from a prescription or manual
                         entry.</td>
                 </tr>
                 {% endfor %}

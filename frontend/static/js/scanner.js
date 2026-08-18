@@ -39,6 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ocrStatus.className = 'status-pill info';
     });
 
+    // Store prescription ID from upload
+    let currentPrescriptionId = null;
+
     scanButton.addEventListener('click', async () => {
         const file = fileInput.files[0];
         if (!file) {
@@ -52,8 +55,15 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('/prescriptions/upload', { method: 'POST', body: formData });
             const result = await response.json();
-            if (!response.ok) throw new Error(result.detail || 'Unable to read the prescription.');
-            ocrStatus.textContent = `OCR Confidence: ${result.confidence}`;
+            if (!response.ok || result.status === 'error') {
+                throw new Error(result.detail || result.message || 'Unable to read the prescription.');
+            }
+
+            // Store the prescription ID for later use
+            currentPrescriptionId = result.id;
+            console.log('Prescription uploaded with ID:', currentPrescriptionId);
+
+            ocrStatus.textContent = `OCR Confidence: ${result.confidence}%`;
             ocrStatus.className = result.confidence >= 60 ? 'status-pill success' : 'status-pill warning';
             ocrOutput.textContent = result.text || 'No readable text found.';
             const parsed = result.parsed || {};
@@ -70,11 +80,16 @@ document.addEventListener('DOMContentLoaded', () => {
             ocrStatus.className = 'status-pill danger';
             ocrOutput.textContent = error.message || 'Unable to read the prescription. Please try a clearer image.';
             window.showToast(error.message, 'error');
+            console.error('OCR error:', error);
         }
     });
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
+        if (!currentPrescriptionId) {
+            window.showToast('Please scan a prescription first before saving.', 'warning');
+            return;
+        }
         const values = Object.fromEntries(new FormData(form).entries());
         if (!values.medicine_name) {
             window.showToast('Please confirm at least the medicine name before saving.', 'warning');
@@ -85,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({
-                    prescription_id: '1',
+                    prescription_id: currentPrescriptionId.toString(),
                     medicine_name: values.medicine_name,
                     strength: values.strength,
                     frequency: values.frequency,
@@ -96,8 +111,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             if (!response.ok) throw new Error(result.detail || 'Unable to confirm prescription.');
             window.showToast('Prescription confirmed and saved.', 'success');
+            // Reset form after successful save
+            fileInput.value = '';
+            currentPrescriptionId = null;
+            filePreview.classList.add('hidden');
+            form.reset();
+            ocrOutput.textContent = 'No prescription scanned yet.';
+            ocrStatus.textContent = 'Waiting for file';
+            ocrStatus.className = 'status-pill info';
         } catch (error) {
             window.showToast(error.message, 'error');
+            console.error('Confirmation error:', error);
         }
     });
 });
