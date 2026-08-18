@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Safety | SmartMed Companion{% endblock %}
+{% block content %}
+<div class="page-content">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Medication safety</p>
+            <h3>Safety check</h3>
+        </div>
+    </div>
+    <div class="disclaimer-box">SmartMed Companion is an educational and medication-support tool. It does not replace
+        advice, diagnosis, or treatment from a doctor or pharmacist.</div>
+    <div class="panel">
+        <h4>Safety review</h4>
+        <div class="stack-list compact">
+            {% for alert in alerts %}
+            <div class="alert-box"><span class="severity-badge {{ alert.severity|lower }}">{{ alert.severity }}</span>
+                <div><strong>{{ alert.medicine_names }}</strong></div>
+                <div>{{ alert.description }}</div>
+                <div class="tiny-muted">Source: {{ alert.source }}</div>
+                <div class="tiny-muted">Recommendation: {{ alert.recommendation }}</div>
+            </div>
+            {% else %}
+            <div class="empty-state">No safety alerts found.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

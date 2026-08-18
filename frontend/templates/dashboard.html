@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | SmartMed Companion{% endblock %}
+{% block content %}
+<div class="page-content">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Good morning</p>
+            <h3>Akshay</h3>
+        </div>
+        <div class="badge badge-info">Demo mode</div>
+    </div>
+
+    <div class="summary-grid">
+        <div class="summary-card primary">
+            <span class="card-label">Today's medicines</span>
+            <h4>3</h4>
+            <small>2 due later today</small>
+        </div>
+        <div class="summary-card warning">
+            <span class="card-label">Upcoming reminders</span>
+            <h4>2</h4>
+            <small>Next: 08:00</small>
+        </div>
+        <div class="summary-card danger">
+            <span class="card-label">Safety alerts</span>
+            <h4>1</h4>
+            <small>Review instructions</small>
+        </div>
+        <div class="summary-card success">
+            <span class="card-label">Recent prescriptions</span>
+            <h4>4</h4>
+            <small>Last upload today</small>
+        </div>
+    </div>
+
+    <div class="two-panel-grid">
+        <section class="panel">
+            <div class="panel-header">
+                <h4>Today's medicines</h4>
+            </div>
+            <div class="stack-list">
+                <div class="medicine-row">
+                    <div><strong>Paracetamol</strong>
+                        <div>500 mg</div>
+                    </div>
+                    <div class="meta-block"><small>08:00</small><small>Three times daily</small></div>
+                    <div class="status status-success">Taken</div>
+                    <div class="mini-actions"><button class="btn btn-sm btn-primary">Mark as Taken</button><button
+                            class="btn btn-sm btn-outline-secondary">Mark as Missed</button></div>
+                </div>
+                <div class="medicine-row">
+                    <div><strong>levocetirizine</strong>
+                        <div>500 mg</div>
+                    </div>
+                    <div class="meta-block"><small>12:30</small><small>As needed</small></div>
+                    <div class="status status-warning">Upcoming</div>
+                    <div class="mini-actions"><button class="btn btn-sm btn-primary">Mark as Taken</button><button
+                            class="btn btn-sm btn-outline-secondary">Mark as Missed</button></div>
+                </div>
+            </div>
+        </section>
+        <section class="panel">
+            <div class="panel-header">
+                <h4>Upcoming reminders</h4>
+            </div>
+            <div class="stack-list compact">
+                <div class="list-item">
+                    <div><strong>loratadine</strong></div>
+                    <div>08:00</div>
+                    <div>Three times daily</div>
+                </div>
+                <div class="list-item">
+                    <div><strong>Disprin</strong></div>
+                    <div>21:00</div>
+                    <div>Once daily</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="two-panel-grid">
+        <section class="panel">
+            <div class="panel-header">
+                <h4>Recent prescriptions</h4>
+            </div>
+            <div class="stack-list compact">
+                <div class="list-item">
+                    <div><strong>Prescription_2026_01.pdf</strong></div>
+                    <div>2026-08-18</div>
+                    <div>3 medicines</div><button class="btn btn-sm btn-outline-primary">View</button>
+                </div>
+            </div>
+        </section>
+        <section class="panel">
+            <div class="panel-header">
+                <h4>Safety alerts</h4>
+            </div>
+            <div class="stack-list compact">
+                <div class="alert-box"><span class="severity-badge low">LOW</span>
+                    <div><strong>levocetirizine, Paracetamol</strong></div>
+                    <div>Demo medication information used for education only.</div><button
+                        class="btn btn-sm btn-outline-secondary">View details</button>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

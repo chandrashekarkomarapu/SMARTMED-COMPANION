@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Medicines | SmartMed Companion{% endblock %}
+{% block content %}
+<div class="page-content">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Medication list</p>
+            <h3>Medicines</h3>
+        </div>
+        <button class="btn btn-primary">Add medicine</button>
+    </div>
+    <div class="disclaimer-box">SmartMed Companion is an educational and medication-support tool. It does not replace
+        advice, diagnosis, or treatment from a doctor or pharmacist.</div>
+    <div class="table-card panel">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Strength</th>
+                    <th>Frequency</th>
+                    <th>Duration</th>
+                    <th>Instructions</th>
+                    <th>Source</th>
+                    <th>Created date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for medicine in medicines %}
+                <tr>
+                    <td>{{ medicine.name }}</td>
+                    <td>{{ medicine.strength or 'Uncertain' }}</td>
+                    <td>{{ medicine.frequency or 'Uncertain' }}</td>
+                    <td>{{ medicine.duration or 'Uncertain' }}</td>
+                    <td>{{ medicine.instructions or '—' }}</td>
+                    <td>{{ medicine.source or 'User-entered' }}</td>
+                    <td>{{ medicine.created_at.strftime('%Y-%m-%d') if medicine.created_at else '—' }}</td>
+                    <td><button class="btn btn-sm btn-outline-primary">View</button></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="empty-state">No medicines yet. Add a medicine from a prescription or manual
+                        entry.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

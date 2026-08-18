@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Scanner | SmartMed Companion{% endblock %}
+{% block content %}
+<div class="page-content">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Prescription intake</p>
+            <h3>Prescription scanner</h3>
+        </div>
+    </div>
+
+    <div class="scanner-shell">
+        <div class="upload-panel panel">
+            <div class="dropzone" id="dropzone" tabindex="0" aria-label="Upload prescription file">
+                <input type="file" id="prescription-file" accept=".png,.jpg,.jpeg,.pdf" hidden>
+                <div class="dropzone-content">
+                    <div class="upload-icon">📤</div>
+                    <h5>Upload prescription image or PDF</h5>
+                    <p>Drag and drop a file or select one from your device.</p>
+                    <button type="button" class="btn btn-primary" id="browse-button">Choose file</button>
+                </div>
+            </div>
+            <div id="file-preview" class="file-preview hidden"></div>
+            <div class="d-flex gap-2 mt-3">
+                <button class="btn btn-primary" id="scan-button">Scan & extract</button>
+                <button class="btn btn-outline-secondary" id="remove-file-button">Remove</button>
+            </div>
+            <div class="disclaimer-box">SmartMed Companion is an educational and medication-support tool. It does not
+                replace advice, diagnosis, or treatment from a doctor or pharmacist.</div>
+        </div>
+
+        <div class="panel result-panel">
+            <h4>OCR result</h4>
+            <div id="ocr-status" class="status-pill info">Waiting for file</div>
+            <div id="ocr-output" class="ocr-output empty-state">No prescription scanned yet.</div>
+            <div class="confirmation-box mt-3">
+                <h5>Confirm extracted details</h5>
+                <form id="confirmation-form" class="confirmation-form">
+                    <label>Medicine Name<input type="text" name="medicine_name" placeholder="Medicine name"></label>
+                    <label>Strength<input type="text" name="strength" placeholder="Strength"></label>
+                    <label>Frequency<input type="text" name="frequency" placeholder="Frequency"></label>
+                    <label>Duration<input type="text" name="duration" placeholder="Duration"></label>
+                    <label>Instructions<input type="text" name="instructions" placeholder="Instructions"></label>
+                    <button type="submit" class="btn btn-primary">Confirm and save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', path='js/scanner.js') }}"></script>{% endblock %}

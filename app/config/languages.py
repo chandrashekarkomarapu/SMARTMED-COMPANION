@@ -1,0 +1,58 @@
+LANGUAGES = {
+    "en": {
+        "dashboard": "Dashboard",
+        "prescriptions": "Prescription Scanner",
+        "medicines": "Medicines",
+        "reminders": "Reminders",
+        "safety": "Safety",
+        "emergency": "Emergency",
+        "settings": "Settings",
+        "search": "Search",
+        "notifications": "Notifications",
+        "profile": "Profile",
+        "welcome": "Welcome",
+        "disclaimer": "SmartMed Companion is an educational and medication-support tool. It does not replace advice, diagnosis, or treatment from a doctor or pharmacist.",
+        "read_aloud": "🔊 Read aloud",
+        "voice_unsupported": "Voice input is not supported by this browser. Please use text input.",
+        "browser_notifications_unsupported": "Browser notifications are not supported. Please check the reminder schedule manually.",
+    },
+    "te": {
+        "dashboard": "డాష్‌బోర్డ్",
+        "prescriptions": "ప్రిస్క్రిప్షన్ స్కానర్",
+        "medicines": "మందులు",
+        "reminders": "రిమైండర్లు",
+        "safety": "సురక్ష",
+        "emergency": "అత్యవసరం",
+        "settings": "సెట్టింగ్స్",
+        "search": "శోధించు",
+        "notifications": "నోటిఫికేషన్లు",
+        "profile": "ప్రొఫైల్",
+        "welcome": "స్వాగతం",
+        "disclaimer": "SmartMed Companion విద్యాపరమైన మరియు మందు సహాయక సాధనం. ఇది వైద్యుడి లేదా ఫార్మిస్ట్‌ నుండి సూచనలు, నిర్ధారణ లేదా చికిత్సను భర్తీ చేయదు.",
+        "read_aloud": "🔊 చదవండి",
+        "voice_unsupported": "ఈ బ్రౌజర్‌లో వాయిస్ ఇన్‌పుట్‌ మద్దతు లేదు. దయచేసి టెక్స్ట్ ఇన్‌పుట్‌ను ఉపయోగించండి.",
+        "browser_notifications_unsupported": "బ్రౌజర్ నోటిఫికేషన్లు మద్దతు ఇవ్వవు. దయచేసి రిమైండర్ షెడ్యూల్‌ను మాన్యువల్గా తనిఖీ చేయండి.",
+    },
+    "hi": {
+        "dashboard": "डैशबोर्ड",
+        "prescriptions": "प्रिस्क्रिप्शन स्कैनर",
+        "medicines": "दवाइयाँ",
+        "reminders": "रिमाइंडर",
+        "safety": "सुरक्षा",
+        "emergency": "आपातकाल",
+        "settings": "सेटिंग्स",
+        "search": "खोजें",
+        "notifications": "सूचनाएँ",
+        "profile": "प्रोफ़ाइल",
+        "welcome": "स्वागत",
+        "disclaimer": "SmartMed Companion एक शैक्षिक और दवा-सहायक उपकरण है। यह डॉक्टर या फार्मासिस्ट की सलाह, निदान या उपचार का विकल्प नहीं है।",
+        "read_aloud": "🔊 पढ़ें",
+        "voice_unsupported": "इस ब्राउज़र में वॉइस इनपुट समर्थित नहीं है। कृपया टेक्स्ट इनपुट का उपयोग करें।",
+        "browser_notifications_unsupported": "ब्राउज़र नोटिफिकेशन समर्थित नहीं हैं। कृपया रिमाइंडर शेड्यूल मैन्युअल रूप से देखें।",
+    },
+}
+
+
+def translate_text(key: str, language: str = "en") -> str:
+    lang = (language or "en").lower()
+    return LANGUAGES.get(lang, LANGUAGES["en"]).get(key, LANGUAGES["en"].get(key, key))
